@@ -1,0 +1,49 @@
+Ghita Alexandru - 323CCa - Tema 1 - PCOM
+
+    Am rezolvat tema integral in aproximativ 18-20 ore de lucru pe parcursul a
+unei saptamani. Parerea mea este ca tema are o dificultate moderata spre grea si
+chiar mi-a pus multe semne de intrebare si probleme, dar s-a dovedit a fi foarte
+utila in invatarea functionarii transmiterii de pachete, cat si structura unui
+pachet in functie de tipul lui.
+
+Implementarea cerintelor explicate (in ordinea in care le-am implementat):
+
+-Procesul de dirijare:
+    Am folosit pe post de schelet codul de la rezolvarea laboratorul 4, primit
+de la laboranta noastra (323CCa). Aici am implementat primirea de pachete si
+descompunerea headerelor pentru a verifica daca este pachet IPv4, daca
+checksum-ul este corect si am calculat urmatoarea destinatie si am trimis
+pachetul mai departe.
+
+-Longest Prefix Match eficient:
+    La acest pas am schimbat algoritmul de get_best_route pentru a se folosi
+de un trie ca sa caute cel mai lung IP care se potriveste. 
+
+    Am implementat trie-ul ce are ca nod un bit din ip si posibila legatura la
+routing table, daca la nodul respectiv se termina IP & mask. Pentru cautare 
+parcurge trie-ul in functie de bitii din IP ul target si retine candidatii pe 
+parcurs, oprindu-se cand nu mai gaseste urmatorul bit in trie.
+
+-Protocolul ICMP:
+    La acest pas am verificat cele 3 cazuri: ttl <= 1, nu s-a gasit ruta catre
+destinatie sau a primit echo request si trebuie sa trimita reply.
+
+    Pentru ttl si best_route nu a fost gasit am folosit o functie prin care
+construiesc de la 0 pachetul si il trimit, pe cand pentru echo reply doar am
+schimbat tipul din headerul icmp, codul si am updatat checksum-ul, dupa care
+am schimbat destinatia cu sursa (pentru a trimite pachetul inapoi) si am
+trimis practic acelasi pachet modificat inapoi de unde a venit.
+
+-Protocolul ARP:
+    Aici am schimbat tabela ARP din statica (din fisier) intr-una pe care
+o populez pe parcurs ce aflu adresele MAC corespondente IP-urilor.
+
+    Cand nu gaseste in tabela o adresa MAC care sa corespunda adresei IP
+a destinatie, atunci trimite un ARP request pentru a afla adresa MAC, iar
+pachetul este pastrat intr-o coada. Eu am folosit 3 cozi: pentru buf,
+pentru len si pentru interfata.
+
+    Cand se primeste un ARP request, atunci se trimite ARP reply-ul cu MAC-ul
+cerut. Cand se primeste un ARP reply, atunci se adauga maparea intre IP si
+ARP in tabela ARP, se scoate din coada pachetul care asteapta si se trimite
+cu toate datele necesare (stiind de data aceasta MAC-ul destinatiei).
