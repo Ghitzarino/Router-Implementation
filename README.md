@@ -52,8 +52,9 @@ This project implements a **routing and packet transmission system**, focusing o
 
 ## **How to Run**  
 1. Clone the repository to your local machine.  
-2. Compile the project using a C compiler (e.g., `gcc`).  
-3. Run the executable to start the router simulation.  
+2. Compile the project using the Makefile (make).
+3. Navigate inside the /checker directory.
+4. Run topo.py to test the router topology or checker.py to go through a series of pre-defined tests.
 
 ---
 
